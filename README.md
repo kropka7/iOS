@@ -1,2 +1,2 @@
-# iOS-
+# iOS
 iOS - learning  - first app
