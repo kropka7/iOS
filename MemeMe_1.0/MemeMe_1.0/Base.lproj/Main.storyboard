@@ -15,45 +15,98 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="YXo-GN-96K">
-                                <rect key="frame" x="87" y="328" width="240" height="240"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="240" id="PHj-Fw-bAa"/>
-                                    <constraint firstAttribute="height" constant="240" id="hxd-Ry-V5K"/>
-                                </constraints>
-                            </imageView>
-                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="kWj-17-Dn5">
-                                <rect key="frame" x="0.0" y="801" width="414" height="61"/>
+                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="rx2-S2-9Ol" userLabel="bottomToolbar">
+                                <rect key="frame" x="0.0" y="813" width="414" height="49"/>
                                 <items>
-                                    <barButtonItem title="Pick" id="eGW-2h-6Xe">
+                                    <barButtonItem width="42" style="plain" systemItem="fixedSpace" id="WR0-iF-6Jw"/>
+                                    <barButtonItem image="camera.fill" catalog="system" id="OVW-0V-ydP">
                                         <connections>
-                                            <action selector="pickAnImage:" destination="BYZ-38-t0r" id="jDF-vC-nxK"/>
+                                            <action selector="camera:" destination="BYZ-38-t0r" id="zGI-tB-vdB"/>
                                         </connections>
                                     </barButtonItem>
+                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="qpz-YB-Wer"/>
+                                    <barButtonItem title="pictureButton" image="photo" catalog="system" id="amD-q4-uD2">
+                                        <connections>
+                                            <action selector="pickImage:" destination="BYZ-38-t0r" id="EJq-EH-Udy"/>
+                                        </connections>
+                                    </barButtonItem>
+                                    <barButtonItem width="42" style="plain" systemItem="fixedSpace" id="C7x-LA-RbX"/>
                                 </items>
+                                <color key="tintColor" systemColor="systemIndigoColor" red="0.34509803919999998" green="0.33725490200000002" blue="0.83921568629999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             </toolbar>
+                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" text="TOP" borderStyle="roundedRect" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="hVH-vY-icD">
+                                <rect key="frame" x="180" y="149" width="54" height="34"/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="12"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
+                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" text="BOTTOM" borderStyle="roundedRect" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="RDK-1s-Mlz">
+                                <rect key="frame" x="166" y="709" width="82" height="34"/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="12"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
+                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" verticalHuggingPriority="249" translatesAutoresizingMaskIntoConstraints="NO" id="OoK-Sc-b0D" userLabel="topToolbar">
+                                <rect key="frame" x="0.0" y="49" width="414" height="50"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="50" id="0jM-v2-lW5"/>
+                                </constraints>
+                                <items>
+                                    <barButtonItem width="42" style="plain" systemItem="fixedSpace" id="50v-ze-pml"/>
+                                    <barButtonItem title="sentButton" image="square.and.arrow.up" catalog="system" id="m2U-mR-x8P">
+                                        <connections>
+                                            <action selector="send:" destination="BYZ-38-t0r" id="fnr-ob-38R"/>
+                                        </connections>
+                                    </barButtonItem>
+                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="FcT-ce-47c"/>
+                                    <barButtonItem title="Cencel" id="cBR-ot-ERt">
+                                        <connections>
+                                            <action selector="cencel:" destination="BYZ-38-t0r" id="Kft-AC-8ea"/>
+                                        </connections>
+                                    </barButtonItem>
+                                    <barButtonItem width="42" style="plain" systemItem="fixedSpace" id="zhb-aq-4DY"/>
+                                </items>
+                                <color key="tintColor" systemColor="systemIndigoColor" red="0.34509803919999998" green="0.33725490200000002" blue="0.83921568629999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            </toolbar>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="bkn-oW-Kxs" userLabel="ImageView">
+                                <rect key="frame" x="0.0" y="88" width="414" height="725"/>
+                            </imageView>
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <constraints>
-                            <constraint firstItem="YXo-GN-96K" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="87" id="1F4-z0-J01"/>
-                            <constraint firstItem="kWj-17-Dn5" firstAttribute="top" secondItem="YXo-GN-96K" secondAttribute="bottom" constant="233" id="6cQ-sL-7XJ"/>
-                            <constraint firstItem="kWj-17-Dn5" firstAttribute="bottom" secondItem="6Tk-OE-BBY" secondAttribute="bottom" id="K7s-ux-Kcj"/>
-                            <constraint firstItem="YXo-GN-96K" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="Ps8-y5-r43"/>
-                            <constraint firstItem="YXo-GN-96K" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="284" id="QM0-Gf-3wg"/>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="YXo-GN-96K" secondAttribute="trailing" constant="87" id="krt-0C-790"/>
-                            <constraint firstItem="YXo-GN-96K" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="qes-5z-4eD"/>
-                            <constraint firstItem="kWj-17-Dn5" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="uBX-Qi-rs6"/>
-                            <constraint firstItem="kWj-17-Dn5" firstAttribute="centerX" secondItem="YXo-GN-96K" secondAttribute="centerX" id="ytc-Pe-Kfc"/>
+                            <constraint firstItem="rx2-S2-9Ol" firstAttribute="bottom" secondItem="6Tk-OE-BBY" secondAttribute="bottom" id="0rt-KI-Ci3"/>
+                            <constraint firstItem="hVH-vY-icD" firstAttribute="top" secondItem="OoK-Sc-b0D" secondAttribute="bottom" constant="50" id="3MR-fj-VW4"/>
+                            <constraint firstItem="bkn-oW-Kxs" firstAttribute="leading" secondItem="rx2-S2-9Ol" secondAttribute="leading" id="BBf-Ff-A2y"/>
+                            <constraint firstItem="rx2-S2-9Ol" firstAttribute="top" secondItem="bkn-oW-Kxs" secondAttribute="bottom" id="J6J-Qc-x6s"/>
+                            <constraint firstItem="OoK-Sc-b0D" firstAttribute="leading" secondItem="bkn-oW-Kxs" secondAttribute="leading" id="PJC-2Y-0eK"/>
+                            <constraint firstItem="rx2-S2-9Ol" firstAttribute="top" secondItem="RDK-1s-Mlz" secondAttribute="bottom" constant="70" id="Tah-Yk-c39"/>
+                            <constraint firstItem="bkn-oW-Kxs" firstAttribute="trailing" secondItem="rx2-S2-9Ol" secondAttribute="trailing" id="TeS-u9-3zu"/>
+                            <constraint firstItem="RDK-1s-Mlz" firstAttribute="centerX" secondItem="rx2-S2-9Ol" secondAttribute="centerX" id="dif-WV-ZUe"/>
+                            <constraint firstItem="bkn-oW-Kxs" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="44" id="flx-kS-4Hy"/>
+                            <constraint firstItem="OoK-Sc-b0D" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="g5Z-x2-SFY"/>
+                            <constraint firstItem="OoK-Sc-b0D" firstAttribute="trailing" secondItem="bkn-oW-Kxs" secondAttribute="trailing" id="r0u-Pv-3Ys"/>
+                            <constraint firstItem="OoK-Sc-b0D" firstAttribute="centerX" secondItem="hVH-vY-icD" secondAttribute="centerX" id="wmZ-Cx-Vac"/>
+                            <constraint firstItem="OoK-Sc-b0D" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="5" id="xc9-Ho-gXv"/>
+                            <constraint firstItem="OoK-Sc-b0D" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="y96-W5-4XU"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
                     <connections>
-                        <outlet property="imagePickerView" destination="YXo-GN-96K" id="PTE-QX-oGg"/>
+                        <outlet property="bottomToolbar" destination="rx2-S2-9Ol" id="LFA-ZY-6cp"/>
+                        <outlet property="cameraButton" destination="OVW-0V-ydP" id="aS6-ck-k6v"/>
+                        <outlet property="cencelButton" destination="cBR-ot-ERt" id="waO-4S-Bpm"/>
+                        <outlet property="imageButton" destination="amD-q4-uD2" id="xYc-dA-cSK"/>
+                        <outlet property="imageView" destination="bkn-oW-Kxs" id="1tl-Go-AQE"/>
+                        <outlet property="sendButton" destination="m2U-mR-x8P" id="8re-bs-yCD"/>
+                        <outlet property="topToolbar" destination="OoK-Sc-b0D" id="DTC-ke-AaQ"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="189.85507246376812" y="177.45535714285714"/>
+            <point key="canvasLocation" x="137.68115942028987" y="126.5625"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="camera.fill" catalog="system" width="64" height="48"/>
+        <image name="photo" catalog="system" width="64" height="46"/>
+        <image name="square.and.arrow.up" catalog="system" width="56" height="64"/>
+    </resources>
 </document>
