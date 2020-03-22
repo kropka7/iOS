@@ -35,14 +35,14 @@
                                 <color key="tintColor" systemColor="systemIndigoColor" red="0.34509803919999998" green="0.33725490200000002" blue="0.83921568629999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             </toolbar>
                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" text="TOP" borderStyle="roundedRect" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="hVH-vY-icD">
-                                <rect key="frame" x="180" y="149" width="54" height="34"/>
-                                <fontDescription key="fontDescription" type="boldSystem" pointSize="12"/>
+                                <rect key="frame" x="177.5" y="149" width="59" height="34"/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
                             <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="BOTTOM" borderStyle="roundedRect" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="8p1-mn-B4Y" userLabel="Bottom Text Field">
                                 <rect key="frame" x="166" y="667" width="97" height="34"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="boldSystem" pointSize="12"/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
                             <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" verticalHuggingPriority="249" translatesAutoresizingMaskIntoConstraints="NO" id="OoK-Sc-b0D" userLabel="topToolbar">
@@ -85,13 +85,12 @@
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
                     <connections>
-                        <outlet property="bottomTextField" destination="8p1-mn-B4Y" id="L0a-cg-nIM"/>
-                        <outlet property="bottomToolbar" destination="rx2-S2-9Ol" id="bBV-dq-JSa"/>
-                        <outlet property="cameraButton" destination="OVW-0V-ydP" id="2D0-HW-cQo"/>
-                        <outlet property="cencelButton" destination="cBR-ot-ERt" id="gKu-H6-avn"/>
-                        <outlet property="imageButton" destination="amD-q4-uD2" id="p7W-Ra-R24"/>
-                        <outlet property="imageView" destination="bkn-oW-Kxs" id="vDG-J0-Nmg"/>
-                        <outlet property="sendButton" destination="m2U-mR-x8P" id="VnA-lz-fpJ"/>
+                        <outlet property="bottomTextField" destination="8p1-mn-B4Y" id="ePN-QW-aHC"/>
+                        <outlet property="bottomToolbar" destination="rx2-S2-9Ol" id="R59-vQ-LuO"/>
+                        <outlet property="cameraButton" destination="OVW-0V-ydP" id="9hf-Sz-1aL"/>
+                        <outlet property="cencelButton" destination="cBR-ot-ERt" id="iJd-3H-uFd"/>
+                        <outlet property="imageView" destination="bkn-oW-Kxs" id="3Od-pD-toN"/>
+                        <outlet property="sendButton" destination="m2U-mR-x8P" id="WML-12-tjC"/>
                         <outlet property="topTextField" destination="hVH-vY-icD" id="nfF-ai-OBA"/>
                         <outlet property="topToolbar" destination="OoK-Sc-b0D" id="nQt-sy-wSX"/>
                     </connections>
