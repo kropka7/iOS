@@ -10,7 +10,8 @@ import UIKit
 
 class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextFieldDelegate {
 
-
+    @IBOutlet weak var topTextField: UITextField!
+    @IBOutlet weak var bottomTextField: UITextField!
     @IBOutlet weak var imageView: UIImageView!
     @IBOutlet weak var topToolbar: UIToolbar!
     @IBOutlet weak var cencelButton: UIBarButtonItem!
@@ -20,31 +21,49 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     @IBOutlet weak var cameraButton: UIBarButtonItem!
 
 
-    @IBAction func pickImage(_ sender: Any) {
+    @IBAction func pickAnImage(_ sender: Any) {
         let imagePicker = UIImagePickerController ()
         imagePicker.delegate = self
         imagePicker.allowsEditing = true
         present(imagePicker, animated: true, completion: nil)
     }
 
+    @IBAction func pickAnImageFromAlbum(_ sender: Any) {
+        let imagePicker = UIImagePickerController()
+        imagePicker.delegate = self
+        imagePicker.sourceType = .photoLibrary
+        present(imagePicker, animated: true, completion: nil)
+    }
+
+    @IBAction func pickAnImageFromCamera(_ sender: Any) {
+        let imagePicker = UIImagePickerController()
+        imagePicker.delegate = self
+        imagePicker.sourceType = .camera
+        present(imagePicker, animated: true, completion: nil)
+    }
+
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        if let image = info[UIImagePickerController.InfoKey.originalImage] as? UIImage {
+            imageView.image = image
+            imageButton.isEnabled = true
+            sendButton.isEnabled = true
+        }
         dismiss(animated: true, completion: nil)
     }
- //   Tells the delegate that the user picked a still image or movie.
 
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
-    }
- //   Tells the delegate that the user cancelled the pick operation.
-
-    @IBAction func camera(_ sender: Any) {
+        dismiss(animated: true, completion: nil)
     }
 
-
-    @IBAction func send(_ sender: Any) {
+    @IBAction func cancelButton(_ sender: Any) {
+        cencelButton.isEnabled = false
+        imageView.image = nil
+        topTextField.text = "TOP"
+        bottomTextField.text = "BOTTOM"
     }
-
-    @IBAction func cencel(_ sender: Any) {
-    }
-
 
 }
+
+
+
+
