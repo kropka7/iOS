@@ -85,13 +85,13 @@
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
                     <connections>
-                        <outlet property="bottomTextField" destination="8p1-mn-B4Y" id="ePN-QW-aHC"/>
+                        <outlet property="bottomTextField" destination="8p1-mn-B4Y" id="OUt-hy-z53"/>
                         <outlet property="bottomToolbar" destination="rx2-S2-9Ol" id="R59-vQ-LuO"/>
                         <outlet property="cameraButton" destination="OVW-0V-ydP" id="9hf-Sz-1aL"/>
                         <outlet property="cencelButton" destination="cBR-ot-ERt" id="iJd-3H-uFd"/>
                         <outlet property="imageView" destination="bkn-oW-Kxs" id="3Od-pD-toN"/>
                         <outlet property="sendButton" destination="m2U-mR-x8P" id="WML-12-tjC"/>
-                        <outlet property="topTextField" destination="hVH-vY-icD" id="nfF-ai-OBA"/>
+                        <outlet property="topTextField" destination="hVH-vY-icD" id="3bz-XN-MKw"/>
                         <outlet property="topToolbar" destination="OoK-Sc-b0D" id="nQt-sy-wSX"/>
                     </connections>
                 </viewController>

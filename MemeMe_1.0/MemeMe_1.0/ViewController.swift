@@ -32,7 +32,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-       // cameraButton.isEnabled = UIImagePickerController.isSourceTypeAvailable(UIImagePickerController.SourceType.camera)
+        // cameraButton.isEnabled = UIImagePickerController.isSourceTypeAvailable(UIImagePickerController.SourceType.camera)
         keyboardNotifications()
     }
 
@@ -44,8 +44,8 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     func configureTextField(_ textField: UITextField, text: String) {
         textField.delegate = self
         textField.text = text
-        topTextField.textAlignment = .center
-        bottomTextField.textAlignment = .center
+        textField.textAlignment = .center
+        textField.defaultTextAttributes = memeTextAttributes
     }
 
     func keyboardNotifications() {
@@ -164,9 +164,9 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         bottomToolbar.isHidden = hidden
     }
 
-    //    let memeTextAttribs: [NSAttributedString.Key:Any] = [
-    //        NSAttributedString.Key.strokeColor: UIColor.black,
-    //        NSAttributedString.Key.foregroundColor: UIColor.white,
-    //        NSAttributedString.Key.font: UIFont(name: "Impact", size: 40)!,
-    //        NSAttributedString.Key.strokeWidth: -3]
+    let memeTextAttributes:[NSAttributedString.Key: Any] = [
+        NSAttributedString.Key.strokeColor: UIColor.black,
+        NSAttributedString.Key.foregroundColor: UIColor.white,
+        NSAttributedString.Key.font: UIFont(name: "HelveticaNeue-CondensedBlack", size: 40)!,
+        NSAttributedString.Key.strokeWidth: -4.0]
 }
