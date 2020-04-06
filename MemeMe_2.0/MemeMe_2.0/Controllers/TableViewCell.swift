@@ -14,8 +14,8 @@ class TableViewCell: UITableViewCell {
     @IBOutlet var tableTopText: UILabel!
     @IBOutlet var tableBottomText: UILabel!
 
-    let imageWidth: CGFloat = 90.0
-    let imageHeight: CGFloat = 90.0
+    let imageWidth: CGFloat = 70.0
+    let imageHeight: CGFloat = 70.0
 
     func imageSetup() {
         let imageSize = CGRect(x: 0, y: 0, width: imageWidth, height: imageHeight)

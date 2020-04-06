@@ -13,6 +13,6 @@ class CollectionViewCell: UICollectionViewCell {
     @IBOutlet var collectionImageCell: UIImageView!
 
     func imageSetup() {
-        collectionImageCell.contentMode = .scaleAspectFill
+        collectionImageCell.contentMode = .scaleAspectFit
     }
 }
