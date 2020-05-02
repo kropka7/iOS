@@ -110,10 +110,11 @@ class MemeViewController: UIViewController, UIImagePickerControllerDelegate, UIN
     }
 
     @IBAction func cancelButton(_ sender: Any) {
-        cencelButton.isEnabled = false
-        imageView.image = nil
-        topTextField.text = "TOP"
-        bottomTextField.text = "BOTTOM"
+//        cencelButton.isEnabled = false
+//        imageView.image = nil
+//        topTextField.text = "TOP"
+//        bottomTextField.text = "BOTTOM"
+        dismiss(animated: true, completion: nil)
     }
 
     @IBAction func sendMeme(_ sender: Any) {
@@ -160,6 +161,7 @@ class MemeViewController: UIViewController, UIImagePickerControllerDelegate, UIN
         textField.defaultTextAttributes = memeTextFieldAttributes
         textField.text = text
         textField.textAlignment = .center
+        
     }
 
     let memeTextFieldAttributes: [NSAttributedString.Key: Any] = [

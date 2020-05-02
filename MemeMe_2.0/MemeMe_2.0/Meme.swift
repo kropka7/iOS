@@ -9,8 +9,8 @@
 import UIKit
 
 struct Meme {
-    var topTextField: String
-    var bottomTextField: String
-    var originalImage: UIImage
-    var memedImage: UIImage
+    let topTextField: String
+    let bottomTextField: String
+    let originalImage: UIImage
+    let memedImage: UIImage
 }
