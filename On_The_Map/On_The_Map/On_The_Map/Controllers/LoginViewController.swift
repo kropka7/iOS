@@ -28,7 +28,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
 
     func setElements() {
         // Hide the error label
-        errorLabel.alpha = 0
+       // errorLabel.alpha = 0
 
         // style elements
 
@@ -83,7 +83,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     func handleLoginResponse(success: Bool, error: Error?) {
         setLoggingIn(false)
         if success {
-            performSegue(withIdentifier: "On The Map", sender: nil)
+            performSegue(withIdentifier: "On_The_Map", sender: nil)
         } else {
             showMessage(message: error!.localizedDescription, title: "Login Failed")
         }

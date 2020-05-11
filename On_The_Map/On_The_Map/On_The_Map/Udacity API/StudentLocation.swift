@@ -7,11 +7,10 @@
 //
 
 import Foundation
+import MapKit
 
-
-class StudentLocationResponse: Codable {
+class StudentLocationResult: Codable {
     var results: [StudentLocation]?
-
 }
 
 struct StudentLocation: Codable {
@@ -26,6 +25,3 @@ struct StudentLocation: Codable {
     let uniqueKey: String
     let updatedAt: String
 }
-
-
-
