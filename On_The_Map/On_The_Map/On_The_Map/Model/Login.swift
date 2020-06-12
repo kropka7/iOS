@@ -1,26 +1,24 @@
 //
-//  LoginResponse.swift
+//  Login.swift
 //  On_The_Map
 //
-//  Created by Marta on 30/04/2020.
+//  Created by Marta on 05/06/2020.
 //  Copyright © 2020 Marta. All rights reserved.
 //
 
 import Foundation
 
-
 struct LoginResponse: Codable {
-    let account: UdacityUserAccount
-    let session: UdacityUserSession
+    let account: Account
+    let session: Session
 }
 
-struct UdacityUserAccount: Codable {
+struct Account: Codable{
     let registered: Bool
     let key: String
 }
 
-struct UdacityUserSession: Codable {
+struct Session: Codable{
     let id: String
     let expiration: String
 }
-

@@ -2,40 +2,54 @@
 //  UdacityAPI.swift
 //  On_The_Map
 //
-//  Created by Marta on 27/04/2020.
+//  Created by Marta on 05/06/2020.
 //  Copyright © 2020 Marta. All rights reserved.
 //
 
 import Foundation
-import UIKit
 
 class UdacityAPI {
-    struct Auth {
-        static var accountKey = ""
+
+
+    static var objectId: String?
+    static var firstName: String?
+    static var lastName: String?
+
+
+    struct Auth{
+  static var firstName = ""
+        static var lastName = ""
+        static var key = ""
         static var sessionId = ""
+        static var createdAtDate = ""
+        static var objectId = ""
     }
 
+
     enum Endpoints {
-        static let base = "https://onthemap-api.udacity.com/v1"
+        static let udacity = "https://onthemap-api.udacity.com/v1"
 
         case login
-        case getStudentLocations
-        case getPublicUserData(userId: String)
-        case postStudentLocations
-        case putStudentLocations(objectId: String)
-
+        case getStudentInformation
+        case postLocation
+        case putLocation
+        case getUsername(String)
         var stringValue: String {
             switch self {
             case .login:
-                return Endpoints.base + "/session"
-            case .getStudentLocations:
-                return Endpoints.base + "/StudentLocation"
-            case let .getPublicUserData(userId):
-                return Endpoints.base + "/users/\(userId)"
-            case .postStudentLocations:
-                return Endpoints.base + "/StudentLocation"
-            case let .putStudentLocations(objectID):
-                return Endpoints.base + "/StudentLocation/\(objectID)"
+                return Endpoints.udacity + "/session"
+
+            case .getStudentInformation:
+                return Endpoints.udacity + "/StudentLocation" + "?limit=100&order=-updatedAt"
+
+            case .postLocation:
+                return Endpoints.udacity + "/StudentLocation"
+
+            case .putLocation:
+                return Endpoints.udacity + "/StudentLocation" + "/\(String(describing: UdacityAPI.objectId!))"
+
+                case .getUsername(_):
+                return Endpoints.udacity + "/users" + "/\(Auth.key)"
             }
         }
 
@@ -44,224 +58,234 @@ class UdacityAPI {
         }
     }
 
-    class func taskForGETRequest<ResponseType: Decodable>(url: URL, responseType: ResponseType.Type, rangeNeeded: Bool, completion: @escaping (ResponseType?, Error?) -> Void) {
-        let task = URLSession.shared.dataTask(with: url) { data, _, error in
-            guard let data = data else {
+
+    class func taskForPostAndPutRequest<ResponseType: Decodable>(body: String, method: String, url: URLRequest, responseType: ResponseType.Type,completion: @escaping (ResponseType?, Error?, Bool) -> Void){
+        var request = url
+        request.httpMethod = method
+        if responseType == LoginResponse.self{
+            request.addValue("application/json", forHTTPHeaderField: "Accept")
+        }
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.httpBody =  body.data(using: .utf8)
+
+        let session = URLSession.shared
+        let task = session.dataTask(with: request) { data, response, error in
+            if error != nil {
                 DispatchQueue.main.async {
-                    completion(nil, error)
+                    completion(nil, error, true)
                 }
                 return
             }
 
             let decoder = JSONDecoder()
+            var newData = data
+            if responseType == LoginResponse.self{
+                let range = (5..<data!.count)
+                newData = data?.subdata(in: range) /* subset response data! */
+            }
             do {
-                if !rangeNeeded {
-                    let responseObject = try decoder.decode(ResponseType.self, from: data)
-                    DispatchQueue.main.async {
-                        completion(responseObject, nil)
-                    }
-                } else {
-                    let range = 5 ..< data.count
-                    let newData = data.subdata(in: range)
 
-                    let decoder = JSONDecoder()
-                    let responseObject = try! decoder.decode(ResponseType.self, from: newData)
-                    DispatchQueue.main.async {
-                        completion(responseObject, nil)
-                    }
-                }
-            } catch {
+                let responseObject = try decoder.decode(ResponseType.self, from: newData!)
                 DispatchQueue.main.async {
-                    completion(nil, error)
+                    completion(responseObject, nil, false)
+                }
+
+            }catch{
+                DispatchQueue.main.async {
+                    completion(nil, error, false)
                 }
             }
         }
-
         task.resume()
     }
 
-    class func taskForPOSTRequest<RequestType: Encodable, ResponseType: Decodable>(url: URL, responseType: ResponseType.Type, body: RequestType, rangeNeeded: Bool, completion: @escaping (ResponseType?, Error?) -> Void) {
-        var request = URLRequest(url: url)
-        request.httpMethod = "POST"
-        request.httpBody = try! JSONEncoder().encode(body)
-        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.addValue("application/json", forHTTPHeaderField: "Accept")
-
-        let task = URLSession.shared.dataTask(with: request) { data, _, error in
-            guard let data = data else {
+    class func taskForGetRequest<ResponseType: Decodable>(url: URLRequest, responseType: ResponseType.Type,completion: @escaping (ResponseType?, Error?) -> Void){
+        let request = url
+        let session = URLSession.shared
+        let task = session.dataTask(with: request) { data, response, error in
+            if error != nil {
                 DispatchQueue.main.async {
-                    completion(nil, error)
+                    completion(nil,error)
                 }
-                return
             }
+
             let decoder = JSONDecoder()
-            do {
-                if !rangeNeeded {
-                    let responseObject = try decoder.decode(ResponseType.self, from: data)
-                    DispatchQueue.main.async {
-                        completion(responseObject, nil)
-                    }
-                } else {
-                    let range = 5 ..< data.count
-                    let dataWithoutSecurityCheck = data.subdata(in: range)
-                    let responseObject = try decoder.decode(ResponseType.self, from: dataWithoutSecurityCheck)
-                    DispatchQueue.main.async {
-                        completion(responseObject, nil)
-                    }
-                }
-            } catch {
-                do {
-                    let errorResponse = try decoder.decode(ErrorResponse.self, from: data) as Error
-                    DispatchQueue.main.async {
-                        completion(nil, errorResponse)
-                    }
-                } catch {
-                    DispatchQueue.main.async {
-                        completion(nil, error)
-                    }
-                }
+            var newData = data
+            if responseType == User.self{
+                let range = (5..<data!.count)
+                newData = data?.subdata(in: range) /* subset response data! */
             }
-        }
-
-        task.resume()
-    }
-
-    class func taskForPUTRequest<RequestType: Encodable, ResponseType: Decodable>(url: URL, responseType: ResponseType.Type, body: RequestType, completion: @escaping (ResponseType?, Error?) -> Void) {
-        var request = URLRequest(url: url)
-        request.httpMethod = "PUT"
-        request.httpBody = try! JSONEncoder().encode(body)
-        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.addValue("application/json", forHTTPHeaderField: "Accept")
-
-        let task = URLSession.shared.dataTask(with: request) { data, _, error in
-            guard let data = data else {
-                DispatchQueue.main.async {
-                    completion(nil, error)
-                }
-                return
-            }
-            let decoder = JSONDecoder()
             do {
-                let responseObject = try decoder.decode(ResponseType.self, from: data)
+                let responseObject = try decoder.decode(ResponseType.self, from: newData!)
                 DispatchQueue.main.async {
                     completion(responseObject, nil)
                 }
-            } catch {
-                do {
-                    let errorResponse = try decoder.decode(ErrorResponse.self, from: data) as Error
+
+            }catch{
+                DispatchQueue.main.async {
+                    completion(nil, error)
+                }
+            }
+        }
+        task.resume()
+
+    }
+
+    //MARK: Requests
+    class func login(username: String, password: String, completion: @escaping(Bool, Error?, Bool)->Void){
+        let requestURL = URLRequest(url: Endpoints.login.url)
+        let body = "{\"udacity\": {\"username\": \"\(username)\", \"password\": \"\(password)\"}}"
+
+        taskForPostAndPutRequest(body: body, method: "POST", url: requestURL, responseType: LoginResponse.self) { (response, error, isNetworkError) in
+            if let response = response {
+                Auth.key = response.account.key
+                Auth.sessionId = response.session.id
+                completion(true,nil, isNetworkError)
+            }else{
+                completion(false, error, isNetworkError)
+            }
+        }
+
+    }
+
+    class func postLocation(mapString: String, mediaURL:String, longitude: Double, latitude: Double,completion: @escaping (StudentData?, Error?) -> () ) {
+      var request = URLRequest(url: Endpoints.postLocation.url)
+         request.httpMethod = "POST"
+       let body = StudentData(objectId: Auth.sessionId, uniqueKey: Auth.key, firstName: Auth.firstName, lastName: Auth.lastName, mapString: mapString, mediaURL: mediaURL, latitude: latitude, longitude: longitude, createdAt: Auth.createdAtDate, updatedAt: getCurrentDate())
+        request.httpBody = try! JSONEncoder().encode(body)
+            let task = URLSession.shared.dataTask(with: request) { data, response, error in
+                guard let data = data else {
                     DispatchQueue.main.async {
-                        completion(nil, errorResponse)
+                        completion(nil, error)
+                    }
+                    return
+                }
+                do {
+                    let responseObj = try JSONDecoder().decode(PostLocationResponse.self, from: data)
+                    Auth.objectId = responseObj.objectId
+                    print(Auth.objectId)
+                    DispatchQueue.main.async {
+                        print(Auth.objectId)
+                        completion(body,nil)
                     }
                 } catch {
                     DispatchQueue.main.async {
                         completion(nil, error)
                     }
+                    print("Faild to post student", error.localizedDescription)
                 }
+
+            }
+            task.resume()
+
+    }
+
+    class func putLocation(mapString: String, mediaURL:String, longitude: Double, latitude: Double,completion: @escaping (StudentInformation?, Error?) -> () ) {
+        var request = URLRequest(url: Endpoints.putLocation.url)
+
+        request.httpMethod = "POST"
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        let body = StudentInformation(objectId: Auth.sessionId, uniqueKey: Auth.key, firstName: Auth.firstName, lastName: Auth.lastName, mapString: mapString, mediaURL: mediaURL, latitude: latitude, longitude: longitude, createdAt: Auth.createdAtDate, updatedAt: getCurrentDate())
+
+        request.httpBody = try! JSONEncoder().encode(body)
+        let task = URLSession.shared.dataTask(with: request) { data, response, error in
+            guard let data = data else {
+                DispatchQueue.main.async {
+                    completion(nil, error)
+                }
+                return
+            }
+            do {
+                let responseObj = try JSONDecoder().decode(PostLocationResponse.self, from: data)
+                Auth.objectId = responseObj.objectId
+                print(Auth.objectId)
+                DispatchQueue.main.async {
+                    print(Auth.objectId)
+                    completion(body, nil)
+                }
+            } catch {
+                DispatchQueue.main.async {
+                    completion(nil, error)
+                }
+                print("Faild to post student", error.localizedDescription)
+            }
+
+        }
+        task.resume()
+
+    }
+
+    class func getStudentLocation(completion: @escaping([StudentInformation], Error?)->Void ){
+        let requestURL = URLRequest(url: Endpoints.getStudentInformation.url)
+        taskForGetRequest(url: requestURL, responseType: Result.self) { (response, error) in
+            if let response = response {
+                completion(response.results, nil)
+            } else {
+                completion([],error)
             }
         }
 
+    }
+    
+    class func getUsername(completion: @escaping (Bool, Error?) -> () ) {
+
+        let task = URLSession.shared.dataTask(with: Endpoints.getUsername(Auth.key).url) { data, response, error in
+            guard let data = data else {
+                completion(false, error)
+                return
+            }
+            let newData = data.subdata(in: 5..<data.count) /* subset response data! */
+            do {
+                let responseObj = try JSONDecoder().decode(UserInfo.self, from: newData)
+                Auth.firstName = responseObj.firstName
+                Auth.lastName = responseObj.lastName
+                DispatchQueue.main.async {
+                    completion(true, nil)
+                }
+            } catch {
+                print("cannot get student name", error.localizedDescription)
+                DispatchQueue.main.async {
+                    completion(false, nil)
+                }
+            }
+
+        }
         task.resume()
     }
 
-   class func login(username: String, password: String, completion: @escaping (Bool, Error?) -> Void) {
-            let body = LoginRequest(udacity: UdacityUser (username: username, password: password))
-            taskForPOSTRequest(url: Endpoints.login.url, responseType: LoginResponse.self, body: body, rangeNeeded: true) { response, error in
-                if let response = response {
-                    Auth.accountKey = response.account.key
-                    Auth.sessionId  = response.session.id
-                    completion(true, nil)
-                } else {
-                    completion(false, error)
-                }
-            }
-        }
-
-    class func logout(completion: @escaping (Bool, Error?) -> Void) {
-        var request = URLRequest(url: URL(string: "https://onthemap-api.udacity.com/v1/session")!)
+    class func logout(completion: @escaping(Error?)->Void){
+        var request = URLRequest(url: Endpoints.login.url)
         request.httpMethod = "DELETE"
-        var xsrfCookie: HTTPCookie?
+        var xsrfCookie: HTTPCookie? = nil
+
         let sharedCookieStorage = HTTPCookieStorage.shared
         for cookie in sharedCookieStorage.cookies! {
-            if cookie.name == "XSRF-TOKEN" { xsrfCookie = cookie }
+            if cookie.name == "XSRF-TOKEN" {
+                xsrfCookie = cookie }
         }
-
         if let xsrfCookie = xsrfCookie {
             request.setValue(xsrfCookie.value, forHTTPHeaderField: "X-XSRF-TOKEN")
         }
 
-        let task = URLSession.shared.dataTask(with: request) { _, _, error in
-            guard error == nil else {
-                completion(false, error)
-                return
+        let session = URLSession.shared
+        let task = session.dataTask(with: request) { data, response, error in
+            if error != nil {
+                completion(error)
+            }else {
+                Auth.key = ""
+                Auth.sessionId = ""
+                UdacityAPI.objectId = ""
+                completion(nil)
             }
 
-            Auth.accountKey = ""
-            Auth.sessionId = ""
-            completion(true, nil)
         }
-
         task.resume()
     }
 
-    class func signup(username: String, password: String, completion: @escaping (Bool, Error?) -> Void) {
-        let body = LoginRequest(udacity: UdacityUser(username: username, password: password))
-        taskForPOSTRequest(url: Endpoints.login.url, responseType: LoginResponse.self, body: body, rangeNeeded: true) { response, error in
-            if let response = response {
-                Auth.accountKey = response.account.key
-                Auth.sessionId = response.session.id
-                completion(true, nil)
-            } else {
-                completion(false, error)
-            }
-        }
-    }
-
-    class func getStudentLocations(limit: Int? = nil, skip: Int? = nil, order: String? = "", uniqueKey: String? = "", completion: @escaping ([StudentLocation]?, Error?) -> Void) {
-        let url = Endpoints.getStudentLocations.url
-        taskForGETRequest(url: url, responseType: StudentLocationResult.self, rangeNeeded: false) { response, error in
-          if response != nil {
-            completion(response?.results, nil)
-                return
-            } else {
-                completion([], error)
-            }
-        }
-    }
-
-
-
-    class func getPublicUserData(userId: String, completion: @escaping (StudentLocation?, Error?) -> Void) {
-        let url = Endpoints.getPublicUserData(userId: userId).url
-
-        taskForGETRequest(url: url, responseType: StudentLocation.self, rangeNeeded: true) { response, error in
-            if response != nil {
-                completion(response, nil)
-                return
-            } else {
-                completion(nil, error)
-            }
-        }
-    }
-
-    class func postStudentLocation(student: StudentLocation, completion: @escaping (Bool, Error?) -> Void) {
-        taskForPOSTRequest(url: Endpoints.postStudentLocations.url, responseType: StudentLocation.self, body: student, rangeNeeded: false) { response, error in
-            if response != nil {
-                completion(true, nil)
-            } else {
-                completion(false, error)
-            }
-        }
-    }
-
-    class func putStudentLocation(student: StudentLocation, completion: @escaping (Bool, Error?) -> Void) {
-        let url = Endpoints.putStudentLocations(objectId: student.objectId).url
-
-        taskForPUTRequest(url: url, responseType: StudentLocation.self, body: student) { response, error in
-            if response != nil {
-                completion(true, nil)
-            } else {
-                completion(false, error)
-            }
-        }
-    }
+    class func getCurrentDate()-> String {
+           let dateFormatter = DateFormatter()
+           dateFormatter.dateStyle = .full
+           dateFormatter.timeStyle = .full
+           return dateFormatter.string(from: Date())
+       }
 }

@@ -2,104 +2,88 @@
 //  AddLocationViewController.swift
 //  On_The_Map
 //
-//  Created by Marta on 27/04/2020.
+//  Created by Marta on 05/06/2020.
 //  Copyright © 2020 Marta. All rights reserved.
 //
 
-import Foundation
-import MapKit
+
 import UIKit
+import MapKit
+
+
 
 class AddLocationViewController: UIViewController {
+    
     @IBOutlet var locationTextField: UITextField!
     @IBOutlet var linkTextField: UITextField!
     @IBOutlet var findButton: UIButton!
-    @IBOutlet var errorLabel: UILabel!
     @IBOutlet var cencelButton: UIBarButtonItem!
-
-    var coordinateToDisplay: CLLocationCoordinate2D!
-    var linkToAdd: String!
-    var locationInString: String!
-
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        setGecoding(false)
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setBackground()
         setElements()
     }
-
+    
     func setBackground() {
         view.backgroundColor = UIColor(red: 205 / 255, green: 239 / 255, blue: 255 / 255, alpha: 1.00)
     }
-
+    
     func setElements() {
-        // Hide the error label
-        errorLabel.alpha = 0
-
         // style elements
-
         Utilities.styleTextField(locationTextField)
         Utilities.styleTextField(linkTextField)
         Utilities.styleButton(findButton)
-        Utilities.styleLabel(errorLabel)
     }
-
-    @IBAction func findLocation(_ sender: Any) {
-        guard let location = locationTextField.text, let link = linkTextField.text, !location.isEmpty, !link.isEmpty else {
-            showMessage(message: "Please enter a location and a link", title: "Find Location Failed")
-            return
-        }
-
-        linkToAdd = link
-        locationInString = location
-
-        getCoordinateFromString(locationStringFromUser: locationInString, completion: handleGetCoordinate(success:error:))
+    
+    @IBAction func fundLocationTapped(_ sender: Any) {
+        performSegue(withIdentifier: "AddLocationViewController", sender: self)
     }
-
-    func getCoordinateFromString(locationStringFromUser: String, completion: @escaping (Bool, Error?) -> Void) {
-        setGettingLocation(true)
+    
+    func getLocation(completion: @escaping (CLLocationCoordinate2D?)->() ) {
         let geoCoder = CLGeocoder()
-        geoCoder.geocodeAddressString(locationStringFromUser) { placemarks, error in
-            if error == nil {
-                if let placemark = placemarks?[0] {
-                    let coordinate = placemark.location!.coordinate
-
-                    self.coordinateToDisplay = coordinate
-                    completion(true, nil)
-                    return
-                }
-            } else {
-                completion(false, error)
+        geoCoder.geocodeAddressString(locationTextField.text ?? "") { (placemark, error) in
+            guard let placemark = placemark, let location = placemark.first?.location else {
+                completion(nil)
+                return
             }
+            completion(location.coordinate)
         }
     }
-
-    func handleGetCoordinate(success: Bool, error: Error?) {
-        setGettingLocation(false)
-        if success {
-            let controller = storyboard!.instantiateViewController(withIdentifier: "EndMapViewController") as! EndMapViewController
-
-            let annotation = MKPointAnnotation()
-            annotation.coordinate = coordinateToDisplay
-            annotation.title = locationInString
-
-//            controller.annotation = annotation
-//            controller.url = linkToAdd
-
-          //  controller.mapLocationString = locationInString
-
-            navigationController?.pushViewController(controller, animated: true)
-        } else {
-            showMessage(message: error!.localizedDescription, title: "Find Location Failed")
+    
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "AddLocationViewController", let controller = segue.destination as? EndMapViewController {
+            self.getLocation { (location) in
+                if let location = location {
+                    controller.location = location
+                }
+            }
+            
+            controller.mediaURL = linkTextField.text ?? ""
+            controller.mapString = locationTextField.text ?? ""
         }
     }
-
-    func setGettingLocation(_ gettingLocation: Bool) {
-
-        locationTextField.isEnabled = !gettingLocation
-        linkTextField.isEnabled = !gettingLocation
-    }
-
-    @IBAction func cencelButton(_ sender: Any) {
+    
+    
+    @IBAction func cenelButton(_ sender: Any) {
         dismiss(animated: true, completion: nil)
     }
 }
+
+
+extension AddLocationViewController {
+    func setGecoding(_ geoCoding: Bool) {
+        locationTextField.isEnabled = !geoCoding
+        linkTextField.isEnabled = !geoCoding
+        findButton.isEnabled = !geoCoding
+    }
+}
+
+
+
