@@ -14,11 +14,14 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet var passwordTextField: UITextField!
     @IBOutlet var loginButton: UIButton!
     @IBOutlet var signupButton: UIButton!
+
+    @IBOutlet weak var activIndecator: UIActivityIndicatorView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         setBackground()
         setElements()
+        activIndecator.hidesWhenStopped = true
     }
     
     func setBackground() {
@@ -68,7 +71,8 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
             UIApplication.shared.open(url)
         }
     }
-    
+
+
     
     @IBAction func loginTapped(_ sender: Any) {
         setLoggingIn(true)
@@ -76,19 +80,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     }
     
     
-    func handleLoginResponse(success: Bool, error: Error?, isNetworkError: Bool) {
-        setLoggingIn(false)
-        if success {
-            self.performSegue(withIdentifier: "On_The_Map", sender: nil)
-        }else{
-            if !isNetworkError{
-                self.showMessage(message: "Invalid username or password.", title: "Login error")
-            }else {
-                self.showMessage(message: error?.localizedDescription ?? "", title:"Login Failed")
-            }
-            
-        }
-    }
+
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "On_The_Map" {
@@ -100,9 +92,23 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
             passwordTextField.resignFirstResponder()
         }
     }
-    
+
+    func handleLoginResponse(success: Bool, error: Error?, isNetworkError: Bool) {
+             setLoggingIn(false)
+             if success {
+                 self.performSegue(withIdentifier: "On_The_Map", sender: nil)
+             }else{
+                 if !isNetworkError{
+                     self.showMessage(message: "Invalid username or password.", title: "Login error")
+                 }else {
+                     self.showMessage(message: error?.localizedDescription ?? "", title:"Login Failed")
+                 }
+
+             }
+         }
     
     func setLoggingIn(_ loggingIn: Bool) {
+        loggingIn ? activIndecator.startAnimating() : activIndecator.stopAnimating()
         loginButton.isEnabled = !loggingIn
         emialTextField.isEnabled = !loggingIn
         passwordTextField.isEnabled = !loggingIn

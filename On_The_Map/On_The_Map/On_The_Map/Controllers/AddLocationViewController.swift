@@ -12,22 +12,22 @@ import MapKit
 
 
 
-class AddLocationViewController: UIViewController {
+class AddLocationViewController: UIViewController, UITextFieldDelegate {
     
     @IBOutlet var locationTextField: UITextField!
     @IBOutlet var linkTextField: UITextField!
     @IBOutlet var findButton: UIButton!
     @IBOutlet var cencelButton: UIBarButtonItem!
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        setGecoding(false)
-    }
+    @IBOutlet weak var activIndecator: UIActivityIndicatorView!
+    
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
         setBackground()
         setElements()
+        activIndecator.hidesWhenStopped = true
     }
     
     func setBackground() {
@@ -39,6 +39,37 @@ class AddLocationViewController: UIViewController {
         Utilities.styleTextField(locationTextField)
         Utilities.styleTextField(linkTextField)
         Utilities.styleButton(findButton)
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        configureTextField()
+        contifureTapGesture()
+    }
+    
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+    }
+    
+    
+    @objc func handleTap() {
+        view.endEditing(true)
+    }
+    
+    private func contifureTapGesture() {
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(LoginViewController.handleTap))
+        view.addGestureRecognizer(tapGesture)
+    }
+    
+    private func configureTextField() {
+        locationTextField.delegate = self
+        linkTextField.delegate = self
+    }
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return true
     }
     
     @IBAction func fundLocationTapped(_ sender: Any) {
@@ -74,11 +105,12 @@ class AddLocationViewController: UIViewController {
     @IBAction func cenelButton(_ sender: Any) {
         dismiss(animated: true, completion: nil)
     }
-}
-
-
-extension AddLocationViewController {
+    
+    
     func setGecoding(_ geoCoding: Bool) {
+        
+        geoCoding ? activIndecator.startAnimating() : activIndecator.stopAnimating()
+        
         locationTextField.isEnabled = !geoCoding
         linkTextField.isEnabled = !geoCoding
         findButton.isEnabled = !geoCoding
